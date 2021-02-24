@@ -2,6 +2,7 @@ package com.example.currencyconverter.activity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -10,10 +11,11 @@ import com.example.currencyconverter.fragment.ConverterFragment;
 import com.example.currencyconverter.fragment.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Thread.UncaughtExceptionHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Thread.setDefaultUncaughtExceptionHandler(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -47,5 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.mainFrame, fragment)
                 .commit();
+    }
+
+    @Override
+    public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
+        int a = 0;
     }
 }
