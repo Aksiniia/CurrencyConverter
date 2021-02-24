@@ -7,35 +7,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.currencyconverter.R;
+import com.example.currencyconverter.data.ConstData;
 import com.example.currencyconverter.fragment.ConverterFragment;
 import com.example.currencyconverter.fragment.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements Thread.UncaughtExceptionHandler {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Thread.setDefaultUncaughtExceptionHandler(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ConstData.vals.add("USD - Доллар США");
+        ConstData.vals.add("AUD - Австралийский доллар");
+        ConstData.vals.add("BYN - Белорусский рубль");
+        ConstData.vals.add("DKK - Датских крон");
+        ConstData.vals.add("EUR - Евро");
 
         BottomNavigationView mainBottomNav = findViewById(R.id.mainBottomNav);
         mainBottomNav.setOnNavigationItemSelectedListener(item -> {
             if (mainBottomNav.getSelectedItemId() == item.getItemId())
                 return false;
 
-            switch (item.getItemId()) {
-                case R.id.navClock: {
-                    changeFragment(new ConverterFragment());
-
-                    break;
-                }
-
-                default: {
-                    changeFragment(new SettingsFragment());
-
-                    break;
-                }
+            if (item.getItemId() == R.id.navClock) {
+                changeFragment(new ConverterFragment());
+            } else {
+                changeFragment(new SettingsFragment());
             }
 
             return true;
@@ -52,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements Thread.UncaughtEx
     }
 
     @Override
-    public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
-        int a = 0;
+    protected void onResume() {
+        super.onResume();
+
+        changeFragment(new ConverterFragment());
     }
 }

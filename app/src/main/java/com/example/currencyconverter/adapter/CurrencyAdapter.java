@@ -1,38 +1,56 @@
 package com.example.currencyconverter.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.currencyconverter.R;
+import com.example.currencyconverter.data.UserData;
 
 import java.util.List;
 
 public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.CurrencyHolder> {
 
+    private final Activity activity;
+    private final List<String> currencies;
 
-    private List<String> currencies;
-
-    public CurrencyAdapter(List<String> currencies) {
+    public CurrencyAdapter(Activity activity, List<String> currencies) {
+        this.activity = activity;
         this.currencies = currencies;
     }
 
     @NonNull
     @Override
     public CurrencyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.currency_holder, parent, false);
-        return new CurrencyHolder(view);
+        return
+                new CurrencyHolder(
+                        LayoutInflater
+                                .from(parent.getContext())
+                                .inflate(R.layout.currency_card, parent, false)
+                );
     }
 
     @Override
     public void onBindViewHolder(@NonNull CurrencyHolder holder, int position) {
+        if (UserData.currentVal == position)
+            holder.currencyDot.setVisibility(View.VISIBLE);
+        else
+            holder.currencyDot.setVisibility(View.GONE);
+
         String c = currencies.get(position);
-        holder.currencyName.setText(c);
+        ((TextView) holder.itemView.findViewById(R.id.currencyName)).setText(c);
+
+        holder.itemView.setOnClickListener(v -> {
+            UserData.currentVal = position;
+
+            activity.finish();
+        });
     }
 
     @Override
@@ -40,14 +58,13 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
         return currencies.size();
     }
 
-    public class CurrencyHolder extends RecyclerView.ViewHolder {
-        public TextView currencyName;
-        public RadioButton currencyCheck;
+    public static class CurrencyHolder extends RecyclerView.ViewHolder {
+        public ImageView currencyDot;
 
         public CurrencyHolder(View view) {
             super(view);
-            currencyName = view.findViewById(R.id.currencyName);
-            currencyCheck = view.findViewById(R.id.currencyCheck);
+
+            currencyDot = view.findViewById(R.id.currencyDot);
         }
     }
 }
